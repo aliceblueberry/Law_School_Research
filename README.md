@@ -1,7 +1,7 @@
 # Law_School_Research
 Project for law school research on effect of occupational licensing on lawyer misconduct.
 
-#Project Members
+Project Members
 Alice Wang, Andy Wu, and Yifeng Guo.
 
 Usage:
