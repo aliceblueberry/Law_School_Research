@@ -9,12 +9,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 #ActionChains
 from selenium.webdriver import ActionChains
+
 import sys
 import time
 #Part 2
 import csv
 options = webdriver.ChromeOptions()
-browser = webdriver.Chrome(executable_path = "./chromedriver", chrome_options=options);
+browser = webdriver.Chrome(executable_path = '/Users/apple/Downloads/chromedriver', chrome_options=options);
 # The website we wish to retrieve information from.
 browser.get("https://www.dcbar.org/attorney-discipline/disciplinary-decisions.cfm");
 try:
@@ -31,7 +32,7 @@ finally:
     time.sleep(3);
     date_from.click();
     date_from.clear();
-    date_from.send_keys("2019/01/01");
+    date_from.send_keys("2020/01/01");
     date_from.send_keys(Keys.ENTER);
     time.sleep(2);
     elems = browser.find_elements(By.XPATH, '//form')
@@ -40,6 +41,22 @@ finally:
     array_for_everything_container = []
     all_the_links = []
     #in-var
+    counter = 0
+    #click through all hrefs
+    for elem in elems:
+        linked_file = elem.find_elements_by_tag_name('a')
+        if len(linked_file) != 0:
+            for file in linked_file:
+                actions = ActionChains(browser)
+                #download
+                actions.move_to_element(file).perform()
+                actions.click(file).perform()
+                print("Successfully download", file.text)
+                counter = counter + 1
+        #test sample, download 10 once      
+        if counter > 10:
+            break;
+        
     for elem in elems:
         #The start of everything here.
         #The first element for everything.
@@ -66,9 +83,13 @@ finally:
                 date_of_action = each_action_separated[1].split('<br>')[0][1:]
                 type_of_action = each_action_separated[2].split('<br>')[0][1:]
                 summary_of_action = each_action_separated[3].split('<br>')[0][1:].replace("\n", "")
+                html_of_pdf = ""
+                if "<a href=" in each_action_separated[3]:
+                    html_of_pdf = each_action_separated[3].split('<a href=')[1].split('>')[0].replace("\"","")[1:]
                 array_for_everything.append(date_of_action)
                 array_for_everything.append(type_of_action)
                 array_for_everything.append(summary_of_action)
+                array_for_everything.append(html_of_pdf)
                 array_for_everything_container.append(array_for_everything)
                 print(array_for_everything)
                 array_for_everything = []
@@ -77,7 +98,10 @@ finally:
             for ki in a_tags:
                 all_the_links.append(ki.get_attribute("href"))
                 #print(ki.get_attribute("href"))
-    array_for_everything_container.insert(0,['name','date of action','type of action','summary of action'])
+    #Part 3 Here
+  
+    array_for_everything_container.insert(0,['name','date of action','type of action','summary of action','html_code'])
+    print("Completed")
     with open('protagonist.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(array_for_everything_container)
