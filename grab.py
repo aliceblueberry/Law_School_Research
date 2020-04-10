@@ -129,13 +129,28 @@ finally:
                 #print(ki.get_attribute("href"))
     #Part 3 Here
 
-    array_for_everything_container.insert(0,['name','date of action','type of action','summary of action','html_code'])
     for elem in array_for_everything_container:
         name_array = elem[0].split();
         firstname = name_array[0];
-        lastname = elem[0].split()[len(name_array))-1]
+        lastname = elem[0].split()[len(name_array)-1]
         print("firstname: " + firstname)
         print("lastname: " + lastname)
+        browser.get("https://join.dcbar.org/eweb/DynamicPage.aspx?Site=dcbar&WebCode=FindMember");
+        firstname_DOM = browser.find_element(By.ID, "firstOrMiddleInput");
+        lastname_DOM = browser.find_element(By.ID, "lastNameInput");
+        SubmitButton_DOM = browser.find_element(By.ID, "SubmitButton");
+        firstname_DOM.click();
+        firstname_DOM.send_keys(firstname);
+        lastname_DOM.click();
+        lastname_DOM.send_keys(lastname);
+        SubmitButton_DOM.click();
+        info_DOM = browser.find_elements(By.XPATH, "//div[contains(@style,'margin-left: 30px;')]")
+        info_DOM.pop(0);
+        for info in info_DOM:
+            print(info.get_attribute("innerHTML"))
+        time.sleep(10000);
+
+    array_for_everything_container.insert(0,['name','date of action','type of action','summary of action','html_code'])
     print("Completed")
     with open('protagonist.csv', 'w', newline='') as file:
         writer = csv.writer(file)
