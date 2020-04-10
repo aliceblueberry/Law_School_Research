@@ -14,19 +14,48 @@ import sys
 import time
 #Part 2
 import csv
+#Part 3
+import os
+import subprocess
+#Getting fancy
+from progress.bar import Bar
+
+bar = Bar('Importing', max =10)
+
+bar.next()
+print("  Check Download Path")
+if os.path.exists("LawProjectDownloadFolder") is False:
+    os.mkdir("LawProjectDownloadFolder")
+currentPath = os.getcwd();
+downloadpath = os.path.join(currentPath, "LawProjectDownloadFolder")
+bar.next()
+print("  File will store in " + downloadpath)
 options = webdriver.ChromeOptions()
-browser = webdriver.Chrome(executable_path = '/Users/apple/Downloads/chromedriver', chrome_options=options);
+#This options can run chrome driver headless
+#options.add_argument("--headless")
+prefs = {
+        "download.default_directory":downloadpath,
+        "directory_upgrade": True
+        }
+options.add_experimental_option("prefs", prefs)
+bar.next()
+print("  Setting up Chrome Driver")
+browser = webdriver.Chrome(executable_path = './chromedriverforWindow.exe', chrome_options=options);
 # The website we wish to retrieve information from.
+bar.next()
+print("  Go to URL")
 browser.get("https://www.dcbar.org/attorney-discipline/disciplinary-decisions.cfm");
 try:
-    print("Waiting the Page to load");
+    bar.next()
+    print("  Waiting the Page to load");
     element = WebDriverWait(browser, 10).until(
         EC.presence_of_element_located((By.ID, "startDate"))
     )
 finally:
-    print("Page loaded");
+    bar.next()
+    print("  Page loaded");
     date_from = browser.find_element(By.ID, "startDate");
-    print(date_from);
+    # print(date_from);
     #Wait for the thing to load fully. You can tweak it if you like.
     #First Step: Extract everything, and throw them in a CSV file.
     time.sleep(3);
@@ -51,12 +80,12 @@ finally:
                 #download
                 actions.move_to_element(file).perform()
                 actions.click(file).perform()
-                print("Successfully download", file.text)
+                print("  Successfully download", file.text)
                 counter = counter + 1
-        #test sample, download 10 once      
-        if counter > 10:
+        #test sample, download 10 once
+        if counter > 1:
             break;
-        
+
     for elem in elems:
         #The start of everything here.
         #The first element for everything.
@@ -91,7 +120,7 @@ finally:
                 array_for_everything.append(summary_of_action)
                 array_for_everything.append(html_of_pdf)
                 array_for_everything_container.append(array_for_everything)
-                print(array_for_everything)
+                #print(array_for_everything)
                 array_for_everything = []
         a_tags = elem.find_elements_by_tag_name("a")
         if(len(a_tags)>0):
@@ -99,10 +128,21 @@ finally:
                 all_the_links.append(ki.get_attribute("href"))
                 #print(ki.get_attribute("href"))
     #Part 3 Here
-  
+
     array_for_everything_container.insert(0,['name','date of action','type of action','summary of action','html_code'])
+    for elem in array_for_everything_container:
+        name_array = elem[0].split();
+        firstname = name_array[0];
+        lastname = elem[0].split()[len(name_array))-1]
+        print("firstname: " + firstname)
+        print("lastname: " + lastname)
     print("Completed")
     with open('protagonist.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(array_for_everything_container)
         #print(array_for_everything)
+    bar.next()
+    bar.next()
+    bar.next()
+    bar.next()
+    bar.finish()
