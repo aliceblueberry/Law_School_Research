@@ -125,85 +125,20 @@ a_tags = elem.find_elements_by_tag_name("a")
 
 
 
-array_of_attorney_information_container = []
-array_of_attorney_information = []
 
-if(len(a_tags)>0):
-    for ki in a_tags:
-        all_the_links.append(ki.get_attribute("href"))
-    #print(ki.get_attribute("href"))
-    #Part 3 Here
     
-    for elem in array_for_everything_container:
-        name_array = elem[0].split();
-        firstname = name_array[0];
-        lastname = elem[0].split()[len(name_array)-1]
-        print("firstname: " + firstname)
-        print("lastname: " + lastname)
-        browser.get("https://join.dcbar.org/eweb/DynamicPage.aspx?Site=dcbar&WebCode=FindMember");
-        firstname_DOM = browser.find_element(By.ID, "firstOrMiddleInput");
-        lastname_DOM = browser.find_element(By.ID, "lastNameInput");
-        SubmitButton_DOM = browser.find_element(By.ID, "SubmitButton");
-        firstname_DOM.click();
-        firstname_DOM.send_keys(firstname);
-        lastname_DOM.click();
-        lastname_DOM.send_keys(lastname);
-        SubmitButton_DOM.click();
-        info_DOM = browser.find_elements(By.XPATH, "//div[contains(@style,'margin-left: 30px;')]")
-        info_DOM.pop(0);
-        for info in info_DOM:
-            #Try to parse everything here.
-            #print(info.get_attribute("innerHTML"))
-            each_info_about = info.get_attribute("innerHTML")
-            real_name = firstname + " " + lastname
-            
-            real_address = "N/A"
-            if("UNITED STATES" in each_info_about):
-                real_address = each_info_about.split('<br>')[1] + " " + each_info_about.split('<br>')[2] + " " +  each_info_about.split('<br>')[3].replace("\n","").replace("\t","").strip()
-
-            real_phone_number = "N/A"
-            if("<br><span class=\"DataFormLabel\">Phone: " in each_info_about and "<!-- <br><span class=\"DataFormLabel\">Phone: " not in each_info_about):
-                real_phone_number = each_info_about.split('Phone: ')[1].split('<br>')[0].replace("\n ","").replace("\t","").replace("</span>","").replace("\n ","").replace("<!-- ","").strip()
-
-            real_fax_number = "N/A"
-            if("<br><span class=\"DataFormLabel\">Fax: " in each_info_about and "<!-- <br><span class=\"DataFormLabel\">Fax: " not in each_info_about):
-                real_fax_number = each_info_about.split('Fax: ')[1].split('<br>')[0].replace("\n ","").replace("\t","").replace("</span>","").replace("\n ","").strip()
-
-            real_membership = "N/A"
-            if("<br><span class=\"DataFormLabel\">Membership Status: " in each_info_about and "<!-- <br><span class=\"DataFormLabel\">Membership Status: " not in each_info_about):
-                real_membership = each_info_about.split('Membership Status: ')[1].split('<br>')[0].replace("</span>","").replace("\t","").replace("\n ","").replace("<!--","").strip()
-
-            membership_type = "N/A"
-            if("<br><span class=\"DataFormLabel\">Membership Type: " in each_info_about ):
-                    membership_type = each_info_about.split('Membership Type: </span>')[1].split('<br>')[0].replace("<!--","").replace("</span>","").strip()
-            if( membership_type.strip() == "" or membership_type.strip() == "-->"):
-                membership_type = "N/A"
-            real_join_date = "N/A"
-
-            if("<br><span class=\"DataFormLabel\">Date of Admission: " in each_info_about and "<!-- <br><span class=\"DataFormLabel\">Date of Admission: " not in each_info_about):
-                real_join_date = each_info_about.split('Date of Admission: </span> ')[1].split('<br>')[0][0:10].strip()
-            array_of_attorney_information = [real_name,real_address,real_phone_number,real_fax_number,real_membership,membership_type,real_join_date]
-                    
-            print(array_of_attorney_information)
-            #print(real_phone_number)
-            array_of_attorney_information_container.append(array_of_attorney_information)
-            array_of_attorney_information = []
-
-            
-            time.sleep(3);
 
 
 
-array_of_attorney_information_container.insert(0,['name','address','phone number','fax number', 'membership status','membership type','date of admission'])
+
+
 
 array_for_everything_container.insert(0,['name','date of action','type of action','summary of action','html_code'])
 print("Completed")
 with open('attorney_with_cases.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerows(array_for_everything_container)
-with open('attorney_with_information.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerows(array_of_attorney_information_container)
+
     #print(array_for_everything)
     bar.next()
     bar.next()
