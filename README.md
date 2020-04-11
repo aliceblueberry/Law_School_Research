@@ -1,8 +1,16 @@
 # Law_School_Research
 Project for law school research on effect of occupational licensing on lawyer misconduct.
 
-Project Members
+## Project Members
 Alice Wang, Andy Wu, and Yifeng Guo.
+
+## Code Details
+
+1. Put the code inside a folder. REMOVE everything except the chromedriver and the code.
+Run the following commands:
+''
+
+grab.py: 
 
 Usage:
 
