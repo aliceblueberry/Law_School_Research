@@ -55,13 +55,13 @@ finally:
     bar.next()
     print("  Page loaded");
     date_from = browser.find_element(By.ID, "startDate");
-    # print(date_from);
     #Wait for the thing to load fully. You can tweak it if you like.
     #First Step: Extract everything, and throw them in a CSV file.
     time.sleep(3);
     date_from.click();
     date_from.clear();
-    date_from.send_keys("2020/03/21");
+    #NOTICE: PLEASE CHANGE THIS ENTRY.
+    date_from.send_keys("1900/01/01");
     date_from.send_keys(Keys.ENTER);
     time.sleep(2);
     elems = browser.find_elements(By.XPATH, '//form')
