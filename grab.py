@@ -61,7 +61,8 @@ finally:
     time.sleep(3);
     date_from.click();
     date_from.clear();
-    date_from.send_keys("2020/03/21");
+    #NOTICE: change this
+    date_from.send_keys("1900/01/01");
     date_from.send_keys(Keys.ENTER);
     time.sleep(2);
     elems = browser.find_elements(By.XPATH, '//form')
@@ -204,7 +205,6 @@ with open('attorney_with_cases.csv', 'w', newline='') as file:
 with open('attorney_with_information.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerows(array_of_attorney_information_container)
-    #print(array_for_everything)
     bar.next()
     bar.next()
     bar.next()
