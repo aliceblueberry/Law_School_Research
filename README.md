@@ -1,5 +1,5 @@
 # Law_School_Research
-Project for law school research on effect of occupational licensing on lawyer misconduct.
+Project for law school research on effect of occupational licensing on lawyer misconduct, built with Selenium.
 
 ## Project Members
 Alice Wang, Andy Wu, and Yifeng Guo.
